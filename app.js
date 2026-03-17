@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAcdf_NNIcUodsXhV6szld6BQOykJ2_Lh4",
@@ -14,19 +14,18 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const docRef = doc(db, 'app', 'datos');
 
-// --- ESTADO LOCAL ---
 let estado = {
     jugadores: [],
     sugerencias: [],
     partidas: {}
 };
 
-// --- FIREBASE: escuchar cambios en tiempo real ---
-onSnapshot(docRef, (snapshot) => {
+onSnapshot(docRef, async (snapshot) => {
     if (snapshot.exists()) {
         estado = snapshot.data();
     } else {
         estado = { jugadores: [], sugerencias: [], partidas: {} };
+        await setDoc(docRef, estado);
     }
     renderJugadores();
     renderSugerencias();
@@ -80,7 +79,7 @@ async function eliminarJugador(nombre) {
 
     for (const id in estado.partidas) {
         if (estado.partidas[id].jugadores) {
-            estado.partidas[id].jugadores = estado.partidas[id].jugadores.filter(j => j !== nombre);
+            estado.partidas[id].jugadores = estado.partidas[id].jugadores.map(j => j === nombre ? '' : j);
         }
     }
 
@@ -202,12 +201,13 @@ function renderPartidas() {
         filaPartidas.classList.add('partidas-fila');
 
         bloque.partidas.forEach((partida, index) => {
-            const datos_partida = datos[partida.id] || { juego: '', jugadores: [] };
+            const datos_partida = datos[partida.id] || { juego: '', jugadores: Array(partida.huecos).fill('') };
 
             const divPartida = document.createElement('div');
             divPartida.classList.add('partida');
 
-            if (datos_partida.jugadores.length === partida.huecos) {
+            const jugadoresReales = (datos_partida.jugadores || []).filter(j => j && j !== '');
+            if (jugadoresReales.length === partida.huecos) {
                 divPartida.classList.add('completa');
             }
 
@@ -222,7 +222,7 @@ function renderPartidas() {
             inputJuego.placeholder = 'Nombre del juego...';
             inputJuego.value = datos_partida.juego;
             inputJuego.addEventListener('change', async () => {
-                if (!estado.partidas[partida.id]) estado.partidas[partida.id] = { juego: '', jugadores: [] };
+                if (!estado.partidas[partida.id]) estado.partidas[partida.id] = { juego: '', jugadores: Array(partida.huecos).fill('') };
                 estado.partidas[partida.id].juego = inputJuego.value.trim();
                 await guardarEstado();
             });
@@ -234,18 +234,15 @@ function renderPartidas() {
             btnAleatorio.addEventListener('click', async (e) => {
                 e.stopPropagation();
 
-                // Jugadores ya apuntados en este bloque
                 const apuntadosEnBloque = bloque.partidas.flatMap(p =>
-                    estado.partidas[p.id]?.jugadores || []
+                    (estado.partidas[p.id]?.jugadores || []).filter(j => j && j !== '')
                 );
 
-                // Jugadores disponibles para esta partida
-                const yaEnPartida = estado.partidas[partida.id]?.jugadores || [];
+                const yaEnPartida = (estado.partidas[partida.id]?.jugadores || []).filter(j => j && j !== '');
                 const disponibles = estado.jugadores.filter(j =>
                     !apuntadosEnBloque.includes(j) && !yaEnPartida.includes(j)
                 );
 
-                // Mezclar aleatoriamente
                 const mezclados = disponibles.sort(() => Math.random() - 0.5);
                 const huecosSobrantes = partida.huecos - yaEnPartida.length;
                 const nuevos = mezclados.slice(0, huecosSobrantes);
@@ -255,8 +252,16 @@ function renderPartidas() {
                     return;
                 }
 
-                if (!estado.partidas[partida.id]) estado.partidas[partida.id] = { juego: '', jugadores: [] };
-                estado.partidas[partida.id].jugadores = [...yaEnPartida, ...nuevos];
+                if (!estado.partidas[partida.id]) estado.partidas[partida.id] = { juego: '', jugadores: Array(partida.huecos).fill('') };
+
+                const jugadoresActuales = [...(estado.partidas[partida.id].jugadores || Array(partida.huecos).fill(''))];
+                let nuevoIdx = 0;
+                for (let i = 0; i < jugadoresActuales.length && nuevoIdx < nuevos.length; i++) {
+                    if (!jugadoresActuales[i] || jugadoresActuales[i] === '') {
+                        jugadoresActuales[i] = nuevos[nuevoIdx++];
+                    }
+                }
+                estado.partidas[partida.id].jugadores = jugadoresActuales;
                 await guardarEstado();
             });
 
@@ -270,7 +275,7 @@ function renderPartidas() {
             divGrid.dataset.huecos = partida.huecos;
 
             for (let i = 0; i < partida.huecos; i++) {
-                const jugador = datos_partida.jugadores[i] || null;
+                const jugador = datos_partida.jugadores[i] && datos_partida.jugadores[i] !== '' ? datos_partida.jugadores[i] : null;
                 const divHueco = document.createElement('div');
                 divHueco.classList.add('hueco');
 
@@ -283,7 +288,7 @@ function renderPartidas() {
                     btnEliminar.classList.add('btn-eliminar');
                     btnEliminar.addEventListener('click', async (e) => {
                         e.stopPropagation();
-                        estado.partidas[partida.id].jugadores = estado.partidas[partida.id].jugadores.filter(j => j !== jugador);
+                        estado.partidas[partida.id].jugadores[i] = '';
                         await guardarEstado();
                     });
                     divHueco.appendChild(btnEliminar);
@@ -300,13 +305,12 @@ function renderPartidas() {
                     optDefault.textContent = '— elegir —';
                     select.appendChild(optDefault);
 
-                    // Jugadores ya apuntados en este bloque
                     const apuntadosEnBloque = bloque.partidas.flatMap(p =>
-                        estado.partidas[p.id]?.jugadores || []
+                        (estado.partidas[p.id]?.jugadores || []).filter(j => j && j !== '')
                     );
 
                     estado.jugadores.forEach(nombre => {
-                        const yaApuntado = estado.partidas[partida.id]?.jugadores?.includes(nombre);
+                        const yaApuntado = (estado.partidas[partida.id]?.jugadores || []).includes(nombre);
                         const yaEnBloque = apuntadosEnBloque.includes(nombre);
                         if (!yaApuntado && !yaEnBloque) {
                             const opt = document.createElement('option');
@@ -318,8 +322,8 @@ function renderPartidas() {
 
                     select.addEventListener('change', async () => {
                         if (!select.value) return;
-                        if (!estado.partidas[partida.id]) estado.partidas[partida.id] = { juego: '', jugadores: [] };
-                        estado.partidas[partida.id].jugadores.push(select.value);
+                        if (!estado.partidas[partida.id]) estado.partidas[partida.id] = { juego: '', jugadores: Array(partida.huecos).fill('') };
+                        estado.partidas[partida.id].jugadores[i] = select.value;
                         await guardarEstado();
                     });
 
