@@ -155,6 +155,7 @@ button:active {
     font-size: 1rem;
     margin-bottom: 0.75rem;
     letter-spacing: 1px;
+    text-align: center;
 }
 
 .partidas-fila {
@@ -262,4 +263,38 @@ button:active {
     width: 100%;
     height: 100%;
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+
+    #layout {
+        flex-direction: column;
+    }
+
+    #columna-izquierda {
+        width: 100%;
+    }
+
+    #columna-derecha {
+        width: 100%;
+    }
+
+    .partidas-fila {
+        flex-direction: column;
+    }
+
+    .partida {
+        width: 100%;
+    }
+
+    .huecos-grid[data-huecos="3"] {
+        grid-template-columns: repeat(3, 70px);
+    }
+
+    .huecos-grid[data-huecos="4"] {
+        grid-template-columns: repeat(2, 70px);
+    }
 }
