@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EuroWeekend🎲</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <h1>EuroWeekend 🎲</h1>
+    <div id="layout">
+        <div id="columna-izquierda">
+            <section id="seccion-jugadores">
+                <h2>Jugadores</h2>
+                <ul id="lista-jugadores"></ul>
+                <input type="text" id="input-jugador" placeholder="Tu nombre..." />
+                <button id="btn-añadir-jugador">Añadir jugador</button>
+            </section>
+
+            <section id="seccion-sugerencias">
+                <h2>Sugerencias de juego</h2>
+                <ul id="lista-sugerencias"></ul>
+
+                <select id="select-jugador">
+                    <option value="">-- Elige tu nombre --</option>
+                </select>
+                <input type="text" id="input-juego" placeholder="Nombre del juego..." />
+                <button id="btn-añadir-sugerencia">Sugerir juego</button>
+            </section>
+        </div>
+        <div id="columna-derecha">
+            <section id="seccion-partidas">
+                <h2>Partidas</h2>
+                <div id="bloques-partidas"></div>
+            </section>
+        </div>
+    </div>
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>

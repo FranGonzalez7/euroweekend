@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #1a1a2e;
+    background-image: radial-gradient(circle at 20% 30%, #16213e 0%, #1a1a2e 60%);
+    color: #e8d5b7;
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    text-align: center;
+    color: #f4c542;
+    text-shadow: 0 0 20px rgba(244, 197, 66, 0.4);
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+}
+
+h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    color: #f4c542;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+}
+
+section {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(244, 197, 66, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+ul {
+    list-style: none;
+    margin-bottom: 1rem;
+}
+
+li {
+    background: rgba(244, 197, 66, 0.08);
+    border-left: 3px solid #f4c542;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 0.6rem 0.9rem;
+    margin-bottom: 0.75rem;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(244, 197, 66, 0.3);
+    border-radius: 8px;
+    color: #e8d5b7;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input[type="text"]:focus,
+select:focus {
+    border-color: #f4c542;
+}
+
+select option {
+    background: #1a1a2e;
+}
+
+button {
+    width: 100%;
+    padding: 0.65rem;
+    background: #f4c542;
+    color: #1a1a2e;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: background 0.2s, transform 0.1s;
+}
+
+button:hover {
+    background: #ffd966;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.btn-eliminar {
+    width: auto;
+    padding: 0.1rem 0.4rem;
+    background: transparent;
+    color: rgba(244, 197, 66, 0.4);
+    font-size: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    letter-spacing: 0;
+    transition: color 0.2s;
+}
+
+.btn-eliminar:hover {
+    background: transparent;
+    color: #e05c5c;
+}
+
+/* --- LAYOUT --- */
+
+#layout {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+#columna-izquierda {
+    width: 30%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+#columna-derecha {
+    width: 70%;
+    flex: none;
+    min-width: 0;
+}
+
+/* --- PARTIDAS --- */
+
+.bloque {
+    margin-bottom: 2rem;
+}
+
+.bloque h3 {
+    font-family: 'Cinzel', serif;
+    color: #f4c542;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: 1px;
+}
+
+.partidas-fila {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.partida {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(244, 197, 66, 0.15);
+    border-radius: 10px;
+    padding: 0.75rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.partida-cabecera {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.partida-cabecera span {
+    font-size: 0.8rem;
+    color: rgba(232, 213, 183, 0.5);
+    white-space: nowrap;
+}
+
+.partida-cabecera input {
+    margin: 0;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+}
+
+.huecos-grid {
+    display: grid;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.huecos-grid[data-huecos="3"] {
+    grid-template-columns: repeat(3, 70px);
+}
+
+.huecos-grid[data-huecos="4"] {
+    grid-template-columns: repeat(2, 70px);
+}
+
+.hueco {
+    width: 70px;
+    height: 70px;
+    aspect-ratio: unset;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.hueco.vacio {
+    border: 2px dashed rgba(244, 197, 66, 0.3);
+    background: rgba(244, 197, 66, 0.03);
+}
+
+.hueco.vacio:hover {
+    border-color: rgba(244, 197, 66, 0.7);
+    background: rgba(244, 197, 66, 0.08);
+}
+
+.hueco.ocupado {
+    border: 2px solid rgba(244, 197, 66, 0.5);
+    background: rgba(244, 197, 66, 0.12);
+}
+
+.hueco-icono {
+    font-size: 1.5rem;
+    color: rgba(244, 197, 66, 0.3);
+}
+
+.hueco-nombre {
+    font-size: 0.75rem;
+    text-align: center;
+    color: #e8d5b7;
+    padding: 0 0.25rem;
+    word-break: break-word;
+}
+
+.hueco .btn-eliminar {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    padding: 0;
+    font-size: 0.6rem;
+}
+
+.hueco-select {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
