@@ -227,8 +227,42 @@ function renderPartidas() {
                 await guardarEstado();
             });
 
+            const btnAleatorio = document.createElement('button');
+            btnAleatorio.textContent = '🎲';
+            btnAleatorio.classList.add('btn-dado');
+            btnAleatorio.title = 'Rellenar con jugadores aleatorios';
+            btnAleatorio.addEventListener('click', async (e) => {
+                e.stopPropagation();
+
+                // Jugadores ya apuntados en este bloque
+                const apuntadosEnBloque = bloque.partidas.flatMap(p =>
+                    estado.partidas[p.id]?.jugadores || []
+                );
+
+                // Jugadores disponibles para esta partida
+                const yaEnPartida = estado.partidas[partida.id]?.jugadores || [];
+                const disponibles = estado.jugadores.filter(j =>
+                    !apuntadosEnBloque.includes(j) && !yaEnPartida.includes(j)
+                );
+
+                // Mezclar aleatoriamente
+                const mezclados = disponibles.sort(() => Math.random() - 0.5);
+                const huecosSobrantes = partida.huecos - yaEnPartida.length;
+                const nuevos = mezclados.slice(0, huecosSobrantes);
+
+                if (nuevos.length === 0) {
+                    alert('No hay jugadores disponibles para esta partida');
+                    return;
+                }
+
+                if (!estado.partidas[partida.id]) estado.partidas[partida.id] = { juego: '', jugadores: [] };
+                estado.partidas[partida.id].jugadores = [...yaEnPartida, ...nuevos];
+                await guardarEstado();
+            });
+
             cabecera.appendChild(label);
             cabecera.appendChild(inputJuego);
+            cabecera.appendChild(btnAleatorio);
             divPartida.appendChild(cabecera);
 
             const divGrid = document.createElement('div');
