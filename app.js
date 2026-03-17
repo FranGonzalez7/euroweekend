@@ -207,6 +207,10 @@ function renderPartidas() {
             const divPartida = document.createElement('div');
             divPartida.classList.add('partida');
 
+            if (datos_partida.jugadores.length === partida.huecos) {
+                divPartida.classList.add('completa');
+            }
+
             const cabecera = document.createElement('div');
             cabecera.classList.add('partida-cabecera');
 
@@ -262,9 +266,15 @@ function renderPartidas() {
                     optDefault.textContent = '— elegir —';
                     select.appendChild(optDefault);
 
+                    // Jugadores ya apuntados en este bloque
+                    const apuntadosEnBloque = bloque.partidas.flatMap(p =>
+                        estado.partidas[p.id]?.jugadores || []
+                    );
+
                     estado.jugadores.forEach(nombre => {
                         const yaApuntado = estado.partidas[partida.id]?.jugadores?.includes(nombre);
-                        if (!yaApuntado) {
+                        const yaEnBloque = apuntadosEnBloque.includes(nombre);
+                        if (!yaApuntado && !yaEnBloque) {
                             const opt = document.createElement('option');
                             opt.value = nombre;
                             opt.textContent = nombre;

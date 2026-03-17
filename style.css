@@ -298,3 +298,19 @@ button:active {
         grid-template-columns: repeat(2, 70px);
     }
 }
+
+#texto-sugerencias {
+  font-size: 0.8rem;
+  color: rgba(232, 213, 183, 0.5);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.partida.completa {
+  border-color: rgba(80, 200, 120, 0.5);
+  background: rgba(80, 200, 120, 0.06);
+}
+
+.partida.completa .partida-cabecera span {
+  color: rgba(80, 200, 120, 0.7);
+}
