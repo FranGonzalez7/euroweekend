@@ -11,20 +11,27 @@
 <body>
 
     <h1>EuroWeekend 🎲</h1>
-    <div id="layout">
-        <div id="columna-izquierda">
-            <section id="seccion-jugadores">
+
+    <nav id="appbar">
+        <button class="nav-btn active" data-seccion="jugadores">👥 Jugadores</button>
+        <button class="nav-btn" data-seccion="ludoteca">🃏 Ludoteca</button>
+        <button class="nav-btn" data-seccion="partidas">🎲 Partidas</button>
+        <button class="nav-btn" data-seccion="comida">🍕 Comida</button>
+    </nav>
+
+    <main id="contenido">
+
+        <div id="seccion-jugadores" class="seccion activa">
+            <section>
                 <h2>Jugadores</h2>
                 <ul id="lista-jugadores"></ul>
                 <input type="text" id="input-jugador" placeholder="Tu nombre..." />
                 <button id="btn-añadir-jugador">Añadir jugador</button>
             </section>
-
-            <section id="seccion-sugerencias">
-                <h2>Petición de juego</h2>
-                <p id="texto-sugerencias">Cada jugador propondrá un juego para el finde.</p>
+            <section>
+                <h2>Sugerencias de juego</h2>
+                <p id="texto-sugerencias">Cada jugador puede proponer un juego para el finde.</p>
                 <ul id="lista-sugerencias"></ul>
-
                 <select id="select-jugador">
                     <option value="">-- Elige tu nombre --</option>
                 </select>
@@ -32,13 +39,35 @@
                 <button id="btn-añadir-sugerencia">Sugerir juego</button>
             </section>
         </div>
-        <div id="columna-derecha">
-            <section id="seccion-partidas">
+
+        <div id="seccion-ludoteca" class="seccion">
+            <section>
+                <h2>Ludoteca</h2>
+                <ul id="lista-ludoteca"></ul>
+                <select id="select-jugador-ludoteca">
+                    <option value="">-- Tu nombre --</option>
+                </select>
+                <input type="text" id="input-juego-ludoteca" placeholder="Nombre del juego..." />
+                <button id="btn-añadir-ludoteca">Añadir juego</button>
+            </section>
+        </div>
+
+        <div id="seccion-partidas" class="seccion">
+            <section>
                 <h2>Partidas</h2>
                 <div id="bloques-partidas"></div>
             </section>
         </div>
-    </div>
+
+        <div id="seccion-comida" class="seccion">
+            <section>
+                <h2>Comida</h2>
+                <p>Próximamente...</p>
+            </section>
+        </div>
+
+    </main>
+
     <script type="module" src="app.js"></script>
 </body>
 

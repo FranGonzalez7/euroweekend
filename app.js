@@ -30,6 +30,7 @@ onSnapshot(docRef, async (snapshot) => {
     renderJugadores();
     renderSugerencias();
     renderPartidas();
+    renderLudoteca();
 });
 
 async function guardarEstado() {
@@ -343,6 +344,73 @@ function renderPartidas() {
     });
 }
 
+// --- NAVEGACIÓN ---
+document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+
+        btn.classList.add('active');
+        document.getElementById(`seccion-${btn.dataset.seccion}`).classList.add('activa');
+    });
+});
+
+// --- LUDOTECA ---
+
+function renderLudoteca() {
+    const lista = document.getElementById('lista-ludoteca');
+    lista.innerHTML = '';
+
+    (estado.ludoteca || []).forEach(item => {
+        const li = document.createElement('li');
+        li.classList.add('ludoteca-item');
+        li.innerHTML = `
+  <div class="ludoteca-nombre"><strong>${item.juego}</strong></div>
+  <div class="ludoteca-autor">· ${item.jugador}</div>
+`;
+        const btn = document.createElement('button');
+        btn.textContent = '✕';
+        btn.classList.add('btn-eliminar');
+        btn.addEventListener('click', () => eliminarJuegoLudoteca(item.juego));
+
+        li.querySelector('.ludoteca-nombre').appendChild(btn);
+        lista.appendChild(li);
+    });
+
+    // Actualizar select
+    const select = document.getElementById('select-jugador-ludoteca');
+    select.innerHTML = '<option value="">-- Tu nombre --</option>';
+    estado.jugadores.forEach(nombre => {
+        const opt = document.createElement('option');
+        opt.value = nombre;
+        opt.textContent = nombre;
+        select.appendChild(opt);
+    });
+}
+
+async function añadirJuegoLudoteca() {
+    const jugador = document.getElementById('select-jugador-ludoteca').value;
+    const juego = document.getElementById('input-juego-ludoteca').value.trim();
+
+    if (!jugador) { alert('Elige tu nombre primero'); return; }
+    if (!juego) return;
+
+    if ((estado.ludoteca || []).find(j => j.juego.toLowerCase() === juego.toLowerCase())) {
+        alert('Ese juego ya está en la ludoteca');
+        return;
+    }
+
+    if (!estado.ludoteca) estado.ludoteca = [];
+    estado.ludoteca.push({ juego, jugador });
+    await guardarEstado();
+    document.getElementById('input-juego-ludoteca').value = '';
+}
+
+async function eliminarJuegoLudoteca(juego) {
+    estado.ludoteca = (estado.ludoteca || []).filter(j => j.juego !== juego);
+    await guardarEstado();
+}
+
 // --- EVENTOS ---
 document.getElementById('btn-añadir-jugador').addEventListener('click', añadirJugador);
 document.getElementById('input-jugador').addEventListener('keydown', (e) => {
@@ -351,4 +419,8 @@ document.getElementById('input-jugador').addEventListener('keydown', (e) => {
 document.getElementById('btn-añadir-sugerencia').addEventListener('click', añadirSugerencia);
 document.getElementById('input-juego').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') añadirSugerencia();
+});
+document.getElementById('btn-añadir-ludoteca').addEventListener('click', añadirJuegoLudoteca);
+document.getElementById('input-juego-ludoteca').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') añadirJuegoLudoteca();
 });
