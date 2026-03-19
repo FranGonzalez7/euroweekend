@@ -31,6 +31,8 @@ onSnapshot(docRef, async (snapshot) => {
     renderSugerencias();
     renderPartidas();
     renderLudoteca();
+    renderVotaciones()
+    renderComida()
 });
 
 async function guardarEstado() {
@@ -411,6 +413,216 @@ async function eliminarJuegoLudoteca(juego) {
     await guardarEstado();
 }
 
+// --- VOTACIONES ---
+
+const CATEGORIAS_VOTOS = ['3p', '3pl', '4p', '4pl', '5p'];
+
+function renderVotaciones() {
+    CATEGORIAS_VOTOS.forEach(cat => {
+        const lista = document.getElementById(`votos-${cat}`);
+        if (!lista) return;
+        lista.innerHTML = '';
+
+        const juegos = [...(estado.votaciones?.[cat] || [])].sort((a, b) => (b.votos?.length || 0) - (a.votos?.length || 0));
+
+        juegos.forEach(item => {
+            const li = document.createElement('li');
+            li.classList.add('voto-item');
+
+            const votantes = item.votos || [];
+
+            // Cabecera
+            const cabecera = document.createElement('div');
+            cabecera.classList.add('voto-cabecera');
+
+            const nombre = document.createElement('span');
+            nombre.classList.add('voto-nombre');
+            nombre.textContent = item.juego;
+
+            const contador = document.createElement('span');
+            contador.classList.add('voto-contador');
+            contador.textContent = `· ${votantes.length} voto${votantes.length !== 1 ? 's' : ''}`;
+
+            const btnEliminar = document.createElement('button');
+            btnEliminar.textContent = '✕';
+            btnEliminar.classList.add('btn-eliminar');
+            btnEliminar.addEventListener('click', async () => {
+                estado.votaciones[cat] = estado.votaciones[cat].filter(j => j.juego !== item.juego);
+                await guardarEstado();
+            });
+
+            cabecera.appendChild(nombre);
+            cabecera.appendChild(contador);
+            cabecera.appendChild(btnEliminar);
+
+            // Votos
+            const divVotos = document.createElement('div');
+            divVotos.classList.add('voto-jugadores');
+
+            estado.jugadores.forEach(jugador => {
+                const haVotado = votantes.includes(jugador);
+
+                const btnVoto = document.createElement('button');
+                btnVoto.textContent = jugador;
+                btnVoto.classList.add('btn-voto');
+                if (haVotado) btnVoto.classList.add('votado');
+
+                btnVoto.addEventListener('click', async () => {
+                    const juegoEnEstado = estado.votaciones[cat].find(j => j.juego === item.juego);
+                    if (!juegoEnEstado) return;
+
+                    if (haVotado) {
+                        juegoEnEstado.votos = juegoEnEstado.votos.filter(v => v !== jugador);
+                    } else {
+                        juegoEnEstado.votos = [...(juegoEnEstado.votos || []), jugador];
+                    }
+                    await guardarEstado();
+                });
+
+                divVotos.appendChild(btnVoto);
+            });
+
+            li.appendChild(cabecera);
+            li.appendChild(divVotos);
+            lista.appendChild(li);
+        });
+    });
+}
+
+async function añadirJuegoVotacion(categoria) {
+    const input = document.querySelector(`.input-votacion[data-categoria="${categoria}"]`);
+    const juego = input.value.trim();
+    if (!juego) return;
+
+    if (!estado.votaciones) estado.votaciones = {};
+    if (!estado.votaciones[categoria]) estado.votaciones[categoria] = [];
+
+    if (estado.votaciones[categoria].find(j => j.juego.toLowerCase() === juego.toLowerCase())) {
+        alert('Ese juego ya está en esta categoría');
+        return;
+    }
+
+    estado.votaciones[categoria].push({ juego, votos: [] });
+    await guardarEstado();
+    input.value = '';
+}
+
+// --- COMIDA ---
+
+const CATEGORIAS_COMIDA = ['desayuno', 'almuerzo', 'cena', 'aperitivos', 'bebida'];
+const OPCIONES_BBQ = ['sabado', 'domingo', 'ambas'];
+
+function renderComida() {
+    CATEGORIAS_COMIDA.forEach(cat => {
+        const lista = document.getElementById(`comida-${cat}`);
+        if (!lista) return;
+        lista.innerHTML = '';
+
+        (estado.comida?.[cat] || []).forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+
+            const btn = document.createElement('button');
+            btn.textContent = '✕';
+            btn.classList.add('btn-eliminar');
+            btn.addEventListener('click', async () => {
+                estado.comida[cat] = estado.comida[cat].filter(i => i !== item);
+                await guardarEstado();
+            });
+
+            li.appendChild(btn);
+            lista.appendChild(li);
+        });
+    });
+
+    // BBQ
+    OPCIONES_BBQ.forEach(opcion => {
+        const divVotos = document.getElementById(`votos-bbq-${opcion}`);
+        if (!divVotos) return;
+        divVotos.innerHTML = '';
+
+        const votantes = estado.bbq?.[opcion] || [];
+
+        estado.jugadores.forEach(jugador => {
+            const haVotado = votantes.includes(jugador);
+
+            const btn = document.createElement('button');
+            btn.textContent = jugador;
+            btn.classList.add('btn-voto');
+            if (haVotado) btn.classList.add('votado');
+
+            btn.addEventListener('click', async () => {
+                if (!estado.bbq) estado.bbq = {};
+                if (!estado.bbq[opcion]) estado.bbq[opcion] = [];
+
+                if (haVotado) {
+                    estado.bbq[opcion] = estado.bbq[opcion].filter(v => v !== jugador);
+                } else {
+                    estado.bbq[opcion] = [...estado.bbq[opcion], jugador];
+                }
+                await guardarEstado();
+            });
+
+            divVotos.appendChild(btn);
+        });
+
+        // Contador
+        const contador = document.createElement('span');
+        contador.classList.add('voto-contador');
+        contador.textContent = `${votantes.length} voto${votantes.length !== 1 ? 's' : ''}`;
+        divVotos.appendChild(contador);
+    });
+}
+
+async function añadirComida(categoria) {
+    const input = document.querySelector(`.input-comida[data-categoria="${categoria}"]`);
+    const item = input.value.trim();
+    if (!item) return;
+
+    if (!estado.comida) estado.comida = {};
+    if (!estado.comida[categoria]) estado.comida[categoria] = [];
+
+    if (estado.comida[categoria].includes(item)) {
+        alert('Esa sugerencia ya está en la lista');
+        return;
+    }
+
+    estado.comida[categoria].push(item);
+    await guardarEstado();
+    input.value = '';
+}
+
+// --- MODAL INFO ---
+
+const INFO_TEXTOS = {
+    'jugadores': 'Añade aquí a todos los participantes del finde. Cada jugador debe registrarse para poder apuntarse a partidas y votar.',
+    'sugerencias-juego': 'Cada jugador debe proponer un juego que le gustaría jugar este finde. Solo se permite una sugerencia por persona.',
+    'ludoteca': 'Catálogo de juegos disponibles para el finde. Añade los juegos que traes para que todos sepan con qué contamos.',
+    'votaciones': 'Vota los juegos que más te apetece jugar según el número de jugadores. Los juegos se ordenan automáticamente por votos.',
+    'partidas': 'Organización de las partidas por franja horaria. Solo puedes estar en una partida por franja. Usa el 🎲 para rellenar huecos aleatoriamente.',
+    'sugerencias-comida': 'Apunta lo que quieras traer o pedir en cada categoría. Cuanto antes lo añadas, mejor para organizarse.',
+    'bbq': '¿Hacemos barbacoa? Vota en qué días te apetece. Puedes votar más de una opción.'
+};
+
+document.querySelectorAll('.btn-info').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const texto = INFO_TEXTOS[btn.dataset.info] || '';
+        document.getElementById('modal-texto').textContent = texto;
+        document.getElementById('modal-info').classList.add('visible');
+    });
+});
+
+document.getElementById('modal-cerrar').addEventListener('click', () => {
+    document.getElementById('modal-info').classList.remove('visible');
+});
+
+document.getElementById('modal-info').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('modal-info')) {
+        document.getElementById('modal-info').classList.remove('visible');
+    }
+});
+
 // --- EVENTOS ---
 document.getElementById('btn-añadir-jugador').addEventListener('click', añadirJugador);
 document.getElementById('input-jugador').addEventListener('keydown', (e) => {
@@ -423,4 +635,22 @@ document.getElementById('input-juego').addEventListener('keydown', (e) => {
 document.getElementById('btn-añadir-ludoteca').addEventListener('click', añadirJuegoLudoteca);
 document.getElementById('input-juego-ludoteca').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') añadirJuegoLudoteca();
+});
+document.querySelectorAll('.btn-añadir-votacion').forEach(btn => {
+    btn.addEventListener('click', () => añadirJuegoVotacion(btn.dataset.categoria));
+});
+
+document.querySelectorAll('.input-votacion').forEach(input => {
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') añadirJuegoVotacion(input.dataset.categoria);
+    });
+});
+document.querySelectorAll('.btn-añadir-comida').forEach(btn => {
+    btn.addEventListener('click', () => añadirComida(btn.dataset.categoria));
+});
+
+document.querySelectorAll('.input-comida').forEach(input => {
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') añadirComida(input.dataset.categoria);
+    });
 });

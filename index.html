@@ -23,13 +23,13 @@
 
         <div id="seccion-jugadores" class="seccion activa">
             <section>
-                <h2>Jugadores</h2>
+                <h2>Jugadores <button class="btn-info" data-info="jugadores">ℹ</button></h2>
                 <ul id="lista-jugadores"></ul>
                 <input type="text" id="input-jugador" placeholder="Tu nombre..." />
                 <button id="btn-añadir-jugador">Añadir jugador</button>
             </section>
             <section>
-                <h2>Sugerencias de juego</h2>
+                <h2>Peticiones <button class="btn-info" data-info="sugerencias-juego">ℹ</button></h2>
                 <p id="texto-sugerencias">Cada jugador puede proponer un juego para el finde.</p>
                 <ul id="lista-sugerencias"></ul>
                 <select id="select-jugador">
@@ -42,7 +42,7 @@
 
         <div id="seccion-ludoteca" class="seccion">
             <section>
-                <h2>Ludoteca</h2>
+                <h2>Ludoteca <button class="btn-info" data-info="ludoteca">ℹ</button></h2>
                 <ul id="lista-ludoteca"></ul>
                 <select id="select-jugador-ludoteca">
                     <option value="">-- Tu nombre --</option>
@@ -50,23 +50,154 @@
                 <input type="text" id="input-juego-ludoteca" placeholder="Nombre del juego..." />
                 <button id="btn-añadir-ludoteca">Añadir juego</button>
             </section>
+            <section id="seccion-votaciones">
+                <h2>Votaciones <button class="btn-info" data-info="votaciones">ℹ</button></h2>
+                <div class="bloque-votacion">
+                    <h3>3 Players</h3>
+                    <ul class="lista-votos" id="votos-3p"></ul>
+                    <div class="votacion-input">
+                        <input type="text" placeholder="Nombre del juego..." data-categoria="3p"
+                            class="input-votacion" />
+                        <button class="btn-añadir-votacion" data-categoria="3p">+ Añadir</button>
+                    </div>
+                </div>
+
+                <div class="bloque-votacion">
+                    <h3>3 Players (largo)</h3>
+                    <ul class="lista-votos" id="votos-3pl"></ul>
+                    <div class="votacion-input">
+                        <input type="text" placeholder="Nombre del juego..." data-categoria="3pl"
+                            class="input-votacion" />
+                        <button class="btn-añadir-votacion" data-categoria="3pl">+ Añadir</button>
+                    </div>
+                </div>
+
+                <div class="bloque-votacion">
+                    <h3>4 Players</h3>
+                    <ul class="lista-votos" id="votos-4p"></ul>
+                    <div class="votacion-input">
+                        <input type="text" placeholder="Nombre del juego..." data-categoria="4p"
+                            class="input-votacion" />
+                        <button class="btn-añadir-votacion" data-categoria="4p">+ Añadir</button>
+                    </div>
+                </div>
+
+                <div class="bloque-votacion">
+                    <h3>4 Players (largo)</h3>
+                    <ul class="lista-votos" id="votos-4pl"></ul>
+                    <div class="votacion-input">
+                        <input type="text" placeholder="Nombre del juego..." data-categoria="4pl"
+                            class="input-votacion" />
+                        <button class="btn-añadir-votacion" data-categoria="4pl">+ Añadir</button>
+                    </div>
+                </div>
+
+                <div class="bloque-votacion">
+                    <h3>5 Players</h3>
+                    <ul class="lista-votos" id="votos-5p"></ul>
+                    <div class="votacion-input">
+                        <input type="text" placeholder="Nombre del juego..." data-categoria="5p"
+                            class="input-votacion" />
+                        <button class="btn-añadir-votacion" data-categoria="5p">+ Añadir</button>
+                    </div>
+                </div>
+
+            </section>
+
+
         </div>
 
         <div id="seccion-partidas" class="seccion">
             <section>
-                <h2>Partidas</h2>
+                <h2>Partidas <button class="btn-info" data-info="partidas">ℹ</button></h2>
                 <div id="bloques-partidas"></div>
             </section>
         </div>
 
         <div id="seccion-comida" class="seccion">
+
             <section>
-                <h2>Comida</h2>
-                <p>Próximamente...</p>
+                <h2>Sugerencias <button class="btn-info" data-info="sugerencias-comida">ℹ</button></h2>
+                <div class="bloque-comida">
+                    <h3>🌅 Desayuno</h3>
+                    <ul class="lista-comida" id="comida-desayuno"></ul>
+                    <div class="comida-input">
+                        <input type="text" placeholder="Añadir sugerencia..." data-categoria="desayuno"
+                            class="input-comida" />
+                        <button class="btn-añadir-comida" data-categoria="desayuno">+ Añadir</button>
+                    </div>
+                </div>
+
+                <div class="bloque-comida">
+                    <h3>🍽️ Almuerzo</h3>
+                    <ul class="lista-comida" id="comida-almuerzo"></ul>
+                    <div class="comida-input">
+                        <input type="text" placeholder="Añadir sugerencia..." data-categoria="almuerzo"
+                            class="input-comida" />
+                        <button class="btn-añadir-comida" data-categoria="almuerzo">+ Añadir</button>
+                    </div>
+                </div>
+
+                <div class="bloque-comida">
+                    <h3>🌙 Cena</h3>
+                    <ul class="lista-comida" id="comida-cena"></ul>
+                    <div class="comida-input">
+                        <input type="text" placeholder="Añadir sugerencia..." data-categoria="cena"
+                            class="input-comida" />
+                        <button class="btn-añadir-comida" data-categoria="cena">+ Añadir</button>
+                    </div>
+                </div>
+
+                <div class="bloque-comida">
+                    <h3>🥨 Aperitivos</h3>
+                    <ul class="lista-comida" id="comida-aperitivos"></ul>
+                    <div class="comida-input">
+                        <input type="text" placeholder="Añadir sugerencia..." data-categoria="aperitivos"
+                            class="input-comida" />
+                        <button class="btn-añadir-comida" data-categoria="aperitivos">+ Añadir</button>
+                    </div>
+                </div>
+
+                <div class="bloque-comida">
+                    <h3>🥤 Bebida</h3>
+                    <ul class="lista-comida" id="comida-bebida"></ul>
+                    <div class="comida-input">
+                        <input type="text" placeholder="Añadir sugerencia..." data-categoria="bebida"
+                            class="input-comida" />
+                        <button class="btn-añadir-comida" data-categoria="bebida">+ Añadir</button>
+                    </div>
+                </div>
+
             </section>
+
+            <section>
+                <h2>🔥 BBQ <button class="btn-info" data-info="bbq">ℹ</button></h2>
+                <div id="votacion-bbq">
+                    <div class="bbq-opcion" id="bbq-sabado">
+                        <span class="bbq-label">BBQ Sábado</span>
+                        <div class="bbq-votos" id="votos-bbq-sabado"></div>
+                    </div>
+                    <div class="bbq-opcion" id="bbq-domingo">
+                        <span class="bbq-label">BBQ Domingo</span>
+                        <div class="bbq-votos" id="votos-bbq-domingo"></div>
+                    </div>
+                    <div class="bbq-opcion" id="bbq-ambas">
+                        <span class="bbq-label">BBQ Ambas</span>
+                        <div class="bbq-votos" id="votos-bbq-ambas"></div>
+                    </div>
+                </div>
+            </section>
+
         </div>
 
     </main>
+    
+    <div id="modal-info" class="modal-overlay">
+        <div class="modal-box">
+            <button id="modal-cerrar">✕</button>
+            <p id="modal-texto"></p>
+        </div>
+    </div>
 
     <script type="module" src="app.js"></script>
 </body>

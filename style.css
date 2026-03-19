@@ -31,6 +31,7 @@ h2 {
     color: #f4c542;
     margin-bottom: 1rem;
     letter-spacing: 1px;
+    position: relative;
 }
 
 section {
@@ -422,8 +423,8 @@ button:active {
 }
 
 #lista-ludoteca li {
-  display: block;
-  overflow: hidden;
+    display: block;
+    overflow: hidden;
 }
 
 #lista-ludoteca li span {
@@ -462,4 +463,253 @@ button:active {
     white-space: nowrap;
     min-width: 0;
     flex: 1;
+}
+
+/* --- VOTACIONES --- */
+
+#seccion-votaciones {
+    margin-top: 1.5rem;
+}
+
+.bloque-votacion {
+    margin-bottom: 1rem;
+}
+
+.bloque-votacion h3 {
+    font-family: 'Cinzel', serif;
+    color: #f4c542;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: 1px;
+}
+
+.votacion-input {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    align-items: center;
+}
+
+.votacion-input input {
+    margin: 0;
+    flex: 1;
+}
+
+.votacion-input .btn-añadir-votacion {
+    width: auto;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.voto-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(244, 197, 66, 0.15);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    border-left: 3px solid #f4c542;
+}
+
+.voto-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.voto-nombre {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.voto-jugadores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.btn-voto {
+    width: auto;
+    padding: 0.15rem 0.5rem;
+    background: transparent;
+    color: rgba(232, 213, 183, 0.5);
+    border: 1px solid rgba(244, 197, 66, 0.2);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 0;
+    transition: all 0.2s;
+}
+
+.btn-voto:hover {
+    background: rgba(244, 197, 66, 0.08);
+    color: #e8d5b7;
+}
+
+.btn-voto.votado {
+    background: rgba(244, 197, 66, 0.2);
+    color: #f4c542;
+    border-color: rgba(244, 197, 66, 0.6);
+}
+
+.voto-contador {
+    font-size: 0.7rem;
+    color: rgba(232, 213, 183, 0.4);
+    margin-left: 0.4rem;
+}
+
+/* --- COMIDA --- */
+
+.bloque-comida {
+    margin-bottom: 1.25rem;
+}
+
+.bloque-comida h3 {
+    font-family: 'Cinzel', serif;
+    color: #f4c542;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.comida-input {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    align-items: center;
+}
+
+.comida-input input {
+    margin: 0;
+    flex: 1;
+}
+
+.comida-input .btn-añadir-comida {
+    width: auto;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+/* --- BBQ --- */
+
+#votacion-bbq {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.bbq-opcion {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(244, 197, 66, 0.15);
+    border-left: 3px solid #f4c542;
+    border-radius: 8px;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.bbq-label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #e8d5b7;
+}
+
+.bbq-votos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+/* --- BOTÓN INFO --- */
+
+h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-info {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: rgba(244, 197, 66, 0.15);
+    border: 1px solid rgba(244, 197, 66, 0.3);
+    border-radius: 50%;
+    color: #f4c542;
+    font-size: 0.7rem;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0;
+}
+
+.btn-info:hover {
+    background: rgba(244, 197, 66, 0.3);
+    border-color: #f4c542;
+    opacity: 1;
+    transform: none;
+}
+
+/* --- MODAL --- */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.visible {
+    display: flex;
+}
+
+.modal-box {
+    background: #16213e;
+    border: 1px solid rgba(244, 197, 66, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    max-width: 360px;
+    width: 90%;
+    position: relative;
+}
+
+#modal-cerrar {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: auto;
+    padding: 0.2rem 0.5rem;
+    background: transparent;
+    color: rgba(232, 213, 183, 0.4);
+    border: none;
+    font-size: 0.85rem;
+}
+
+#modal-cerrar:hover {
+    background: transparent;
+    color: #e8d5b7;
+}
+
+#modal-texto {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #e8d5b7;
+    margin-top: 0.5rem;
 }
