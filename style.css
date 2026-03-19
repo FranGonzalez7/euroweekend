@@ -341,16 +341,22 @@ button:active {
 }
 
 #appbar .nav-btn {
-    width: auto;
-    padding: 0.5rem 1rem;
+    flex: 1;
+    padding: 0.4rem 0.25rem;
+    border-radius: 8px;
+    border: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    line-height: 1;
     background: transparent;
-    color: rgba(232, 213, 183, 0.5);
-    border: 1px solid rgba(244, 197, 66, 0.2);
-    border-radius: 20px;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-    transition: all 0.2s;
+    color: rgba(232, 213, 183, 0.4);
 }
+
+
+
 
 #appbar .nav-btn:hover {
     background: rgba(244, 197, 66, 0.08);
@@ -594,6 +600,49 @@ button:active {
     white-space: nowrap;
 }
 
+.lista-comida {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.lista-comida li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+}
+
+.lista-comida li span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
+}
+
+.lista-comida li:hover {
+    overflow: visible;
+    z-index: 10;
+    position: relative;
+}
+
+.lista-comida li span.overflow-activo {
+  animation: marquee 3s linear infinite;
+  display: inline-block;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
 /* --- BBQ --- */
 
 #votacion-bbq {
@@ -712,4 +761,15 @@ h2 {
     line-height: 1.6;
     color: #e8d5b7;
     margin-top: 0.5rem;
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.nav-label {
+    font-size: 0.7rem;
+    font-weight: 1000
 }

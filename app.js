@@ -520,7 +520,19 @@ function renderComida() {
 
         (estado.comida?.[cat] || []).forEach(item => {
             const li = document.createElement('li');
-            li.textContent = item;
+            const span = document.createElement('span');
+            span.textContent = item;
+
+            span.addEventListener('mouseenter', () => {
+                if (span.scrollWidth > span.clientWidth) {
+                    span.classList.add('overflow-activo');
+                }
+            });
+            span.addEventListener('mouseleave', () => {
+                span.classList.remove('overflow-activo');
+            });
+
+            li.appendChild(span);
 
             const btn = document.createElement('button');
             btn.textContent = '✕';
@@ -566,7 +578,6 @@ function renderComida() {
             divVotos.appendChild(btn);
         });
 
-        // Contador
         const contador = document.createElement('span');
         contador.classList.add('voto-contador');
         contador.textContent = `${votantes.length} voto${votantes.length !== 1 ? 's' : ''}`;
