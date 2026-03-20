@@ -20,9 +20,13 @@ let estado = {
     partidas: {}
 };
 
+// FIX 1: protección contra sobreescritura con estado vacío
 onSnapshot(docRef, async (snapshot) => {
     if (snapshot.exists()) {
-        estado = snapshot.data();
+        const data = snapshot.data();
+        if (Object.keys(data).length > 0) {
+            estado = data;
+        }
     } else {
         estado = { jugadores: [], sugerencias: [], partidas: {} };
         await setDoc(docRef, estado);
@@ -31,8 +35,8 @@ onSnapshot(docRef, async (snapshot) => {
     renderSugerencias();
     renderPartidas();
     renderLudoteca();
-    renderVotaciones()
-    renderComida()
+    renderVotaciones();
+    renderComida();
 });
 
 async function guardarEstado() {
@@ -347,6 +351,8 @@ function renderPartidas() {
 }
 
 // --- NAVEGACIÓN ---
+
+
 document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -354,6 +360,7 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 
         btn.classList.add('active');
         document.getElementById(`seccion-${btn.dataset.seccion}`).classList.add('activa');
+        
     });
 });
 
@@ -367,9 +374,9 @@ function renderLudoteca() {
         const li = document.createElement('li');
         li.classList.add('ludoteca-item');
         li.innerHTML = `
-  <div class="ludoteca-nombre"><strong>${item.juego}</strong></div>
-  <div class="ludoteca-autor">· ${item.jugador}</div>
-`;
+            <div class="ludoteca-nombre"><strong>${item.juego}</strong></div>
+            <div class="ludoteca-autor">· ${item.jugador}</div>
+        `;
         const btn = document.createElement('button');
         btn.textContent = '✕';
         btn.classList.add('btn-eliminar');
@@ -379,7 +386,6 @@ function renderLudoteca() {
         lista.appendChild(li);
     });
 
-    // Actualizar select
     const select = document.getElementById('select-jugador-ludoteca');
     select.innerHTML = '<option value="">-- Tu nombre --</option>';
     estado.jugadores.forEach(nombre => {
@@ -431,7 +437,6 @@ function renderVotaciones() {
 
             const votantes = item.votos || [];
 
-            // Cabecera
             const cabecera = document.createElement('div');
             cabecera.classList.add('voto-cabecera');
 
@@ -455,23 +460,22 @@ function renderVotaciones() {
             cabecera.appendChild(contador);
             cabecera.appendChild(btnEliminar);
 
-            // Votos
             const divVotos = document.createElement('div');
             divVotos.classList.add('voto-jugadores');
 
             estado.jugadores.forEach(jugador => {
-                const haVotado = votantes.includes(jugador);
-
+                // FIX 3: leer haVotado desde estado en el momento del click
                 const btnVoto = document.createElement('button');
                 btnVoto.textContent = jugador;
                 btnVoto.classList.add('btn-voto');
-                if (haVotado) btnVoto.classList.add('votado');
+                if (votantes.includes(jugador)) btnVoto.classList.add('votado');
 
                 btnVoto.addEventListener('click', async () => {
                     const juegoEnEstado = estado.votaciones[cat].find(j => j.juego === item.juego);
                     if (!juegoEnEstado) return;
 
-                    if (haVotado) {
+                    const yaVotado = (juegoEnEstado.votos || []).includes(jugador);
+                    if (yaVotado) {
                         juegoEnEstado.votos = juegoEnEstado.votos.filter(v => v !== jugador);
                     } else {
                         juegoEnEstado.votos = [...(juegoEnEstado.votos || []), jugador];
@@ -547,7 +551,7 @@ function renderComida() {
         });
     });
 
-    // BBQ
+    // BBQ - FIX 3 aplicado también aquí
     OPCIONES_BBQ.forEach(opcion => {
         const divVotos = document.getElementById(`votos-bbq-${opcion}`);
         if (!divVotos) return;
@@ -556,18 +560,17 @@ function renderComida() {
         const votantes = estado.bbq?.[opcion] || [];
 
         estado.jugadores.forEach(jugador => {
-            const haVotado = votantes.includes(jugador);
-
             const btn = document.createElement('button');
             btn.textContent = jugador;
             btn.classList.add('btn-voto');
-            if (haVotado) btn.classList.add('votado');
+            if (votantes.includes(jugador)) btn.classList.add('votado');
 
             btn.addEventListener('click', async () => {
                 if (!estado.bbq) estado.bbq = {};
                 if (!estado.bbq[opcion]) estado.bbq[opcion] = [];
 
-                if (haVotado) {
+                const yaVotado = estado.bbq[opcion].includes(jugador);
+                if (yaVotado) {
                     estado.bbq[opcion] = estado.bbq[opcion].filter(v => v !== jugador);
                 } else {
                     estado.bbq[opcion] = [...estado.bbq[opcion], jugador];
@@ -650,7 +653,6 @@ document.getElementById('input-juego-ludoteca').addEventListener('keydown', (e) 
 document.querySelectorAll('.btn-añadir-votacion').forEach(btn => {
     btn.addEventListener('click', () => añadirJuegoVotacion(btn.dataset.categoria));
 });
-
 document.querySelectorAll('.input-votacion').forEach(input => {
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') añadirJuegoVotacion(input.dataset.categoria);
@@ -659,7 +661,6 @@ document.querySelectorAll('.input-votacion').forEach(input => {
 document.querySelectorAll('.btn-añadir-comida').forEach(btn => {
     btn.addEventListener('click', () => añadirComida(btn.dataset.categoria));
 });
-
 document.querySelectorAll('.input-comida').forEach(input => {
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') añadirComida(input.dataset.categoria);
