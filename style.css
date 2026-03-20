@@ -750,3 +750,10 @@ h2 {
     font-size: 0.7rem;
     font-weight: 700;
 }
+
+#modal-imagen {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    object-fit: cover;
+}

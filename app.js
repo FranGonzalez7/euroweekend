@@ -360,7 +360,7 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 
         btn.classList.add('active');
         document.getElementById(`seccion-${btn.dataset.seccion}`).classList.add('activa');
-        
+
     });
 });
 
@@ -609,20 +609,31 @@ async function añadirComida(categoria) {
 // --- MODAL INFO ---
 
 const INFO_TEXTOS = {
-    'jugadores': 'Añade aquí a todos los participantes del finde. Cada jugador debe registrarse para poder apuntarse a partidas y votar.',
-    'sugerencias-juego': 'Cada jugador debe proponer un juego que le gustaría jugar este finde. Solo se permite una sugerencia por persona.',
-    'ludoteca': 'Catálogo de juegos disponibles para el finde. Añade los juegos que traes para que todos sepan con qué contamos.',
-    'votaciones': 'Vota los juegos que más te apetece jugar según el número de jugadores. Los juegos se ordenan automáticamente por votos.',
-    'partidas': 'Organización de las partidas por franja horaria. Solo puedes estar en una partida por franja. Usa el 🎲 para rellenar huecos aleatoriamente.',
-    'sugerencias-comida': 'Apunta lo que quieras traer o pedir en cada categoría. Cuanto antes lo añadas, mejor para organizarse.',
-    'bbq': '¿Hacemos barbacoa? Vota en qué días te apetece. Puedes votar más de una opción.'
+    'jugadores': { texto: 'Añade aquí a todos los participantes del finde. Cada jugador debe registrarse para poder apuntarse a partidas y votar.' },
+    'sugerencias-juego': { texto: 'Cada jugador debe proponer un juego que le gustaría jugar este finde. Solo se permite una sugerencia por persona.' },
+    'ludoteca': { texto: 'Catálogo de juegos disponibles para el finde. Añade los juegos que traes para que todos sepan con qué contamos.', imagen: 'img/fran_ludoteca2.png' },
+    'votaciones': { texto: 'Vota los juegos que más te apetece jugar según el número de jugadores. Los juegos se ordenan automáticamente por votos.' },
+    'partidas': { texto: 'Organización de las partidas por franja horaria. Solo puedes estar en una partida por franja. Usa el 🎲 para rellenar huecos aleatoriamente.', imagen: 'img/fran_partidas2.png' },
+    'sugerencias-comida': { texto: 'Apunta lo que quieras traer o pedir en cada categoría. Cuanto antes lo añadas, mejor para organizarse.' },
+    'bbq': { texto: '¿Hacemos barbacoa? Vota en qué días te apetece. Puedes votar más de una opción.' }
 };
 
 document.querySelectorAll('.btn-info').forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const texto = INFO_TEXTOS[btn.dataset.info] || '';
-        document.getElementById('modal-texto').textContent = texto;
+        const info = INFO_TEXTOS[btn.dataset.info] || {};
+        const imagen = document.getElementById('modal-imagen');
+
+        document.getElementById('modal-texto').textContent = info.texto || '';
+
+        if (info.imagen) {
+            imagen.src = info.imagen;
+            imagen.style.display = 'block';
+        } else {
+            imagen.src = '';
+            imagen.style.display = 'none';
+        }
+
         document.getElementById('modal-info').classList.add('visible');
     });
 });
