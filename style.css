@@ -758,34 +758,22 @@ h2 {
     object-fit: cover;
 }
 
-#lista-ludoteca {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-#lista-ludoteca li {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    margin-bottom: 0;
-}
 
 .ludoteca-item {
     display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
     overflow: hidden;
 }
 
 .ludoteca-nombre {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.4rem;
+    overflow: hidden;
     min-width: 0;
-    width: 100%;
+    flex: 1;
 }
 
 .ludoteca-nombre strong {
@@ -793,11 +781,4 @@ h2 {
     text-overflow: ellipsis;
     white-space: nowrap;
     min-width: 0;
-    flex: 1;
-}
-
-.ludoteca-autor {
-    font-size: 0.8rem;
-    color: rgba(232, 213, 183, 0.5);
-    text-align: left;
 }

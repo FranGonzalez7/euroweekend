@@ -20,7 +20,6 @@ let estado = {
     partidas: {}
 };
 
-// FIX 1: protección contra sobreescritura con estado vacío
 onSnapshot(docRef, async (snapshot) => {
     if (snapshot.exists()) {
         const data = snapshot.data();
@@ -150,45 +149,11 @@ async function eliminarSugerencia(jugador) {
 // --- PARTIDAS ---
 
 const PARTIDAS = [
-    {
-        bloque: 'Viernes tarde',
-        partidas: [
-            { id: 'v1', huecos: 4 },
-            { id: 'v2', huecos: 4 },
-        ]
-    },
-    {
-        bloque: 'Sábado mañana',
-        partidas: [
-            { id: 'sm1', huecos: 3 },
-            { id: 'sm2', huecos: 3 },
-            { id: 'sm3', huecos: 4 },
-        ]
-    },
-    {
-        bloque: 'Sábado tarde',
-        partidas: [
-            { id: 'st1', huecos: 3 },
-            { id: 'st2', huecos: 3 },
-            { id: 'st3', huecos: 4 },
-        ]
-    },
-    {
-        bloque: 'Sábado noche',
-        partidas: [
-            { id: 'sn1', huecos: 3 },
-            { id: 'sn2', huecos: 3 },
-            { id: 'sn3', huecos: 4 },
-        ]
-    },
-    {
-        bloque: 'Domingo mañana',
-        partidas: [
-            { id: 'dm1', huecos: 3 },
-            { id: 'dm2', huecos: 3 },
-            { id: 'dm3', huecos: 3 },
-        ]
-    },
+    { bloque: 'Viernes tarde', partidas: [{ id: 'v1', huecos: 4 }, { id: 'v2', huecos: 4 }] },
+    { bloque: 'Sábado mañana', partidas: [{ id: 'sm1', huecos: 3 }, { id: 'sm2', huecos: 3 }, { id: 'sm3', huecos: 4 }] },
+    { bloque: 'Sábado tarde', partidas: [{ id: 'st1', huecos: 3 }, { id: 'st2', huecos: 3 }, { id: 'st3', huecos: 4 }] },
+    { bloque: 'Sábado noche', partidas: [{ id: 'sn1', huecos: 3 }, { id: 'sn2', huecos: 3 }, { id: 'sn3', huecos: 4 }] },
+    { bloque: 'Domingo mañana', partidas: [{ id: 'dm1', huecos: 3 }, { id: 'dm2', huecos: 3 }, { id: 'dm3', huecos: 3 }] },
 ];
 
 function renderPartidas() {
@@ -352,7 +317,6 @@ function renderPartidas() {
 
 // --- NAVEGACIÓN ---
 
-
 document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -360,7 +324,6 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 
         btn.classList.add('active');
         document.getElementById(`seccion-${btn.dataset.seccion}`).classList.add('activa');
-
     });
 });
 
@@ -373,16 +336,18 @@ function renderLudoteca() {
     (estado.ludoteca || []).forEach(item => {
         const li = document.createElement('li');
         li.classList.add('ludoteca-item');
-        li.innerHTML = `
-            <div class="ludoteca-nombre"><strong>${item.juego}</strong></div>
-            <div class="ludoteca-autor">· ${item.jugador}</div>
-        `;
+
+        const nombre = document.createElement('span');
+        nombre.classList.add('ludoteca-nombre');
+        nombre.innerHTML = `<strong>${item.juego}</strong><span class="ludoteca-autor">· ${item.jugador}</span>`;
+
         const btn = document.createElement('button');
         btn.textContent = '✕';
         btn.classList.add('btn-eliminar');
         btn.addEventListener('click', () => eliminarJuegoLudoteca(item.juego));
 
-        li.querySelector('.ludoteca-nombre').appendChild(btn);
+        li.appendChild(nombre);
+        li.appendChild(btn);
         lista.appendChild(li);
     });
 
@@ -394,6 +359,8 @@ function renderLudoteca() {
         opt.textContent = nombre;
         select.appendChild(opt);
     });
+
+    renderSelectsVotacion();
 }
 
 async function añadirJuegoLudoteca() {
@@ -417,6 +384,27 @@ async function añadirJuegoLudoteca() {
 async function eliminarJuegoLudoteca(juego) {
     estado.ludoteca = (estado.ludoteca || []).filter(j => j.juego !== juego);
     await guardarEstado();
+}
+
+function renderSelectsVotacion() {
+    document.querySelectorAll('.input-votacion').forEach(select => {
+        const categoria = select.dataset.categoria;
+        const yaAñadidos = (estado.votaciones?.[categoria] || []).map(j => j.juego);
+        const valorActual = select.value;
+
+        select.innerHTML = '<option value="">-- Elige un juego --</option>';
+
+        (estado.ludoteca || []).forEach(item => {
+            if (!yaAñadidos.includes(item.juego)) {
+                const opt = document.createElement('option');
+                opt.value = item.juego;
+                opt.textContent = item.juego;
+                select.appendChild(opt);
+            }
+        });
+
+        select.value = valorActual;
+    });
 }
 
 // --- VOTACIONES ---
@@ -464,7 +452,6 @@ function renderVotaciones() {
             divVotos.classList.add('voto-jugadores');
 
             estado.jugadores.forEach(jugador => {
-                // FIX 3: leer haVotado desde estado en el momento del click
                 const btnVoto = document.createElement('button');
                 btnVoto.textContent = jugador;
                 btnVoto.classList.add('btn-voto');
@@ -491,11 +478,11 @@ function renderVotaciones() {
             lista.appendChild(li);
         });
     });
+
+    renderSelectsVotacion();
 }
 
-async function añadirJuegoVotacion(categoria) {
-    const input = document.querySelector(`.input-votacion[data-categoria="${categoria}"]`);
-    const juego = input.value.trim();
+async function añadirJuegoVotacion(categoria, juego) {
     if (!juego) return;
 
     if (!estado.votaciones) estado.votaciones = {};
@@ -508,7 +495,6 @@ async function añadirJuegoVotacion(categoria) {
 
     estado.votaciones[categoria].push({ juego, votos: [] });
     await guardarEstado();
-    input.value = '';
 }
 
 // --- COMIDA ---
@@ -551,7 +537,6 @@ function renderComida() {
         });
     });
 
-    // BBQ - FIX 3 aplicado también aquí
     OPCIONES_BBQ.forEach(opcion => {
         const divVotos = document.getElementById(`votos-bbq-${opcion}`);
         if (!divVotos) return;
@@ -662,7 +647,12 @@ document.getElementById('input-juego-ludoteca').addEventListener('keydown', (e) 
     if (e.key === 'Enter') añadirJuegoLudoteca();
 });
 document.querySelectorAll('.btn-añadir-votacion').forEach(btn => {
-    btn.addEventListener('click', () => añadirJuegoVotacion(btn.dataset.categoria));
+    btn.addEventListener('click', () => {
+        const categoria = btn.dataset.categoria;
+        const select = document.querySelector(`.input-votacion[data-categoria="${categoria}"]`);
+        const juego = select.value;
+        if (juego) añadirJuegoVotacion(categoria, juego);
+    });
 });
 document.querySelectorAll('.input-votacion').forEach(input => {
     input.addEventListener('keydown', (e) => {
