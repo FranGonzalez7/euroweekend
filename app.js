@@ -609,11 +609,11 @@ async function añadirComida(categoria) {
 // --- MODAL INFO ---
 
 const INFO_TEXTOS = {
-    'jugadores': { texto: 'Añade aquí a todos los participantes del finde. Cada jugador debe registrarse para poder apuntarse a partidas y votar.' },
-    'sugerencias-juego': { texto: 'Cada jugador debe proponer un juego que le gustaría jugar este finde. Solo se permite una sugerencia por persona.' },
+    'jugadores': { texto: 'Añade aquí tu nombre de jugador. Cada jugador debe registrarse para poder apuntarse a partidas y votar.' },
+    'sugerencias-juego': { texto: 'Cada jugador puede proponer un juego al que le gustaría jugar durante el finde. Lo suyo es que cada uno pueda jugar como mínimo al juego propuesto.' },
     'ludoteca': { texto: 'Catálogo de juegos disponibles para el finde. Añade los juegos que traes para que todos sepan con qué contamos.', imagen: 'img/fran_ludoteca2.png' },
     'votaciones': { texto: 'Vota los juegos que más te apetece jugar según el número de jugadores. Los juegos se ordenan automáticamente por votos.' },
-    'partidas': { texto: 'Organización de las partidas por franja horaria. Solo puedes estar en una partida por franja. Usa el 🎲 para rellenar huecos aleatoriamente.', imagen: 'img/fran_partidas2.png' },
+    'partidas': { texto: 'Organización de las partidas, esto ayudará a ir a tiro hecho para los que quieran aprenderse las reglas antes de ir. Solo puedes estar en una partida por franja. Usa el 🎲 para rellenar huecos aleatoriamente.', imagen: 'img/fran_partidas2.png' },
     'sugerencias-comida': { texto: 'Apunta lo que quieras traer o pedir en cada categoría. Cuanto antes lo añadas, mejor para organizarse.' },
     'bbq': { texto: '¿Hacemos barbacoa? Vota en qué días te apetece. Puedes votar más de una opción.' }
 };
