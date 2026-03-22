@@ -36,6 +36,7 @@ onSnapshot(docRef, async (snapshot) => {
     renderLudoteca();
     renderVotaciones();
     renderComida();
+    renderCompras()
 });
 
 async function guardarEstado() {
@@ -150,6 +151,13 @@ async function eliminarSugerencia(jugador) {
 
 const PARTIDAS = [
     { bloque: 'Viernes tarde', partidas: [{ id: 'v1', huecos: 4 }, { id: 'v2', huecos: 4 }] },
+    {
+        bloque: 'Viernes noche',
+        partidas: [
+            { id: 'vn1', huecos: 4 },
+            { id: 'vn2', huecos: 4 },
+        ]
+    },
     { bloque: 'Sábado mañana', partidas: [{ id: 'sm1', huecos: 3 }, { id: 'sm2', huecos: 3 }, { id: 'sm3', huecos: 4 }] },
     { bloque: 'Sábado tarde', partidas: [{ id: 'st1', huecos: 3 }, { id: 'st2', huecos: 3 }, { id: 'st3', huecos: 4 }] },
     { bloque: 'Sábado noche', partidas: [{ id: 'sn1', huecos: 3 }, { id: 'sn2', huecos: 3 }, { id: 'sn3', huecos: 4 }] },
@@ -591,6 +599,57 @@ async function añadirComida(categoria) {
     input.value = '';
 }
 
+// --- COMPRAS ---
+
+function renderCompras() {
+    const lista = document.getElementById('lista-compras');
+    if (!lista) return;
+    lista.innerHTML = '';
+
+    (estado.compras || []).forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span><strong>${item.producto}</strong> · ${item.precio}€ · ${item.jugador}</span>`;
+
+        const btn = document.createElement('button');
+        btn.textContent = '✕';
+        btn.classList.add('btn-eliminar');
+        btn.addEventListener('click', async () => {
+            estado.compras = estado.compras.filter(c => c !== item);
+            await guardarEstado();
+        });
+
+        li.appendChild(btn);
+        lista.appendChild(li);
+    });
+
+    const select = document.getElementById('select-jugador-compras');
+    if (!select) return;
+    select.innerHTML = '<option value="">-- Tu nombre --</option>';
+    estado.jugadores.forEach(nombre => {
+        const opt = document.createElement('option');
+        opt.value = nombre;
+        opt.textContent = nombre;
+        select.appendChild(opt);
+    });
+}
+
+async function añadirCompra() {
+    const jugador = document.getElementById('select-jugador-compras').value;
+    const producto = document.getElementById('input-compra').value.trim();
+    const precio = parseFloat(document.getElementById('input-precio').value);
+
+    if (!jugador) { alert('Elige tu nombre primero'); return; }
+    if (!producto) { alert('Escribe qué has comprado'); return; }
+    if (isNaN(precio) || precio < 0) { alert('Introduce un precio válido'); return; }
+
+    if (!estado.compras) estado.compras = [];
+    estado.compras.push({ producto, precio, jugador });
+    await guardarEstado();
+
+    document.getElementById('input-compra').value = '';
+    document.getElementById('input-precio').value = '';
+}
+
 // --- MODAL INFO ---
 
 const INFO_TEXTOS = {
@@ -600,7 +659,8 @@ const INFO_TEXTOS = {
     'votaciones': { texto: 'Vota los juegos que más te apetece jugar según el número de jugadores. Los juegos se ordenan automáticamente por votos.' },
     'partidas': { texto: 'Organización de las partidas, esto ayudará a ir a tiro hecho para los que quieran aprenderse las reglas antes de ir. Solo puedes estar en una partida por franja. Usa el 🎲 para rellenar huecos aleatoriamente.', imagen: 'img/fran_partidas2.png' },
     'sugerencias-comida': { texto: 'Apunta lo que quieras traer o pedir en cada categoría. Cuanto antes lo añadas, mejor para organizarse.' },
-    'bbq': { texto: '¿Hacemos barbacoa? Vota en qué días te apetece. Puedes votar más de una opción.' }
+    'bbq': { texto: '¿Hacemos barbacoa? Vota en qué días te apetece. Puedes votar más de una opción.' },
+    'compras': { texto: 'Apunta aquí lo que hayas comprado para el finde con su precio. Así podemos ajustar cuentas al final.' },
 };
 
 document.querySelectorAll('.btn-info').forEach(btn => {
@@ -666,4 +726,9 @@ document.querySelectorAll('.input-comida').forEach(input => {
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') añadirComida(input.dataset.categoria);
     });
+});
+
+document.getElementById('btn-añadir-compra').addEventListener('click', añadirCompra);
+document.getElementById('input-compra').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') añadirCompra();
 });
