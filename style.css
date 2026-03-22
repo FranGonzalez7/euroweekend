@@ -156,9 +156,9 @@ button:active {
 .partida-cabecera {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.25rem;
 }
+
 
 .partida-cabecera span {
     font-size: 0.8rem;
@@ -166,11 +166,13 @@ button:active {
     white-space: nowrap;
 }
 
-.partida-cabecera input {
-    margin: 0;
-    padding: 0.3rem 0.6rem;
-    font-size: 0.85rem;
+.partida-fila-juego {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
 }
+
 
 .huecos-grid {
     display: grid;
@@ -799,4 +801,12 @@ input[type="number"] {
 
 input[type="number"]:focus {
     border-color: #f4c542;
+}
+
+.partida-juego-select {
+    margin: 0;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+    flex: 1;
+    min-width: 0;
 }

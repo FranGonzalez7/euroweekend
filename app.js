@@ -197,13 +197,28 @@ function renderPartidas() {
             const label = document.createElement('span');
             label.textContent = `Partida ${index + 1}`;
 
-            const inputJuego = document.createElement('input');
-            inputJuego.type = 'text';
-            inputJuego.placeholder = 'Nombre del juego...';
+            const filaJuego = document.createElement('div');
+            filaJuego.classList.add('partida-fila-juego');
+
+            const inputJuego = document.createElement('select');
+            inputJuego.classList.add('partida-juego-select');
+
+            const optDefault = document.createElement('option');
+            optDefault.value = '';
+            optDefault.textContent = 'Elige un juego...';
+            inputJuego.appendChild(optDefault);
+
+            (estado.ludoteca || []).forEach(j => {
+                const opt = document.createElement('option');
+                opt.value = j.juego;
+                opt.textContent = j.juego;
+                inputJuego.appendChild(opt);
+            });
+
             inputJuego.value = datos_partida.juego;
             inputJuego.addEventListener('change', async () => {
                 if (!estado.partidas[partida.id]) estado.partidas[partida.id] = { juego: '', jugadores: Array(partida.huecos).fill('') };
-                estado.partidas[partida.id].juego = inputJuego.value.trim();
+                estado.partidas[partida.id].juego = inputJuego.value;
                 await guardarEstado();
             });
 
@@ -246,9 +261,11 @@ function renderPartidas() {
             });
 
             cabecera.appendChild(label);
-            cabecera.appendChild(inputJuego);
-            cabecera.appendChild(btnAleatorio);
             divPartida.appendChild(cabecera);
+
+            filaJuego.appendChild(inputJuego);
+            filaJuego.appendChild(btnAleatorio);
+            divPartida.appendChild(filaJuego);
 
             const divGrid = document.createElement('div');
             divGrid.classList.add('huecos-grid');
