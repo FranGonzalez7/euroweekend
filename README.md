@@ -1,6 +1,10 @@
-# Euroweekend
+# Euroweekend 🎲
 
 Aplicación web para organizar un fin de semana de juegos de mesa entre amigos.
+
+**Demo:** [euroweeknd.netlify.app](https://euroweeknd.netlify.app/)
+
+> La demo muestra los datos reales del finde para el que se creó la app. Está en modo solo lectura, así que no es posible añadir ni modificar nada. La app funciona en escritorio, pero está pensada principalmente para usarse en el móvil.
 
 ## Por qué existe esto
 
