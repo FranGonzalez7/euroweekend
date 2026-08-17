@@ -25,12 +25,14 @@ El corazón de la app. Partidas organizadas por franjas horarias (viernes tarde,
 Sugerencias de comida por categorías (desayuno, almuerzo, cena, aperitivos y bebida), votación para decidir qué días hacemos barbacoa, y un registro de compras con precios para ajustar cuentas al final del finde.
 
 ## Capturas
-
-*(pendiente de añadir)*
-
-| Escritorio | Móvil |
-|---|---|
-| | |
+ 
+| Jugadores | Ludoteca | Partidas |
+| :---: | :---: | :---: |
+| ![Jugadores](screenshots/jugadores.jpeg) | ![Ludoteca](screenshots/ludoteca.jpeg) | ![Partidas](screenshots/partidas.jpeg) |
+ 
+| Comida | Votaciones | Ejemplo Modal |
+| :---: | :---: | :---: |
+| ![Comida](screenshots/comida.jpeg) | ![Votaciones](screenshots/votaciones.jpeg) | ![Ejemplo Modal](screenshots/partidas_pic.jpeg) |
 
 ## Tecnología
 
@@ -49,6 +51,7 @@ euroweekend/
 ├── app.js          # Lógica, renderizado y conexión con Firestore
 ├── icons/          # Iconos de la barra de navegación
 └── img/            # Imágenes de los modales de ayuda
+└── screenshots/    # Capturas de pantalla
 ```
 
 ## Cómo usarla
